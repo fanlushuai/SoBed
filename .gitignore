@@ -1,7 +1,5 @@
 .idea/
 **/*.iml
 env/
-dist/
 *.spec
-*.exe
 build/
