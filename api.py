@@ -1,7 +1,7 @@
-import socket
-import sys
-import uvicorn
+import os
+
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from starlette.responses import RedirectResponse
 from starlette.status import HTTP_302_FOUND
 
@@ -69,3 +69,19 @@ def pc_sleep(sec: int = 5):
 def pc_shutdown(sec: int = 5):
     pc.pc_shutdown(sec)
     return "目前只写了windows，自己补充mac"
+
+
+@app.get("/file/share")
+def file_share():
+    path = "E:\download\share\\"
+    filename = get_file_list(path)[0]
+    return FileResponse(path=path + filename, filename=filename, media_type='application/octet-stream')
+
+
+def get_file_list(file_path):
+    dir_list = os.listdir(file_path)
+    if not dir_list:
+        return
+    else:
+        dir_list = sorted(dir_list, key=lambda x: os.path.getmtime(os.path.join(file_path, x)))
+        return dir_list
